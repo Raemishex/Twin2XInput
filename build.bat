@@ -11,6 +11,19 @@ if not exist "%CSC%" (
 set "DIST=%ROOT%dist"
 if not exist "%DIST%" mkdir "%DIST%"
 
+echo Verifying vigemclient.dll integrity...
+set "EXPECTED_HASH=e024fa8d2b0ae2262dd1b33170bf66735ebc721541666cfb421ed8b63d985805"
+for /f "skip=1 tokens=*" %%H in ('certutil -hashfile "%ROOT%vendor\vigemclient.dll" SHA256 2^>nul') do (
+    if not defined ACTUAL_HASH set "ACTUAL_HASH=%%H"
+)
+if /i not "%ACTUAL_HASH%"=="%EXPECTED_HASH%" (
+    echo [ERROR] vigemclient.dll SHA-256 mismatch!
+    echo   Expected: %EXPECTED_HASH%
+    echo   Got:      %ACTUAL_HASH%
+    exit /b 1
+)
+echo   Hash OK: %ACTUAL_HASH%
+
 set "ICON_ARG="
 if exist "%ROOT%assets\app.ico" (
     set "ICON_ARG=/win32icon:"%ROOT%assets\app.ico""
