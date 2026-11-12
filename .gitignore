@@ -1,6 +1,7 @@
 # Build output & release packages
 dist/
 *.zip
+*.exe
 
 # User runtime configuration
 *.ini

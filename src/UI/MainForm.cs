@@ -266,7 +266,7 @@ namespace Twin2XInput.UI
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            if (_uiTimer != null) _uiTimer.Stop();
+            if (_uiTimer != null) { _uiTimer.Stop(); _uiTimer.Dispose(); _uiTimer = null; }
             if (_pad1 != null) { _pad1.Dispose(); _pad1 = null; }
             if (_pad2 != null) { _pad2.Dispose(); _pad2 = null; }
             if (_vigem != IntPtr.Zero)

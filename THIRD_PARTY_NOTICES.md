@@ -6,6 +6,7 @@ This repository includes or interacts with the following third-party software:
 - **Project:** ViGEmClient (https://github.com/nefarius/ViGEmClient)
 - **Author:** Nefarius Software Solutions e.U. and contributors
 - **License:** MIT License
+- **SHA-256:** `E024FA8D2B0AE2262DD1B33170BF66735EBC721541666CFB421ED8B63D985805`
 - **Notes:** `vigemclient.dll` is the native x64 C/C++ client library used by Twin2XInput via P/Invoke to communicate with the ViGEmBus kernel driver.
 
 ## ViGEmBus Driver (Required Runtime Dependency — Not Bundled)

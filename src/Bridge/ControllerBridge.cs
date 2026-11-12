@@ -30,6 +30,7 @@ namespace Twin2XInput.Bridge
         private IntPtr _preparsedData = IntPtr.Zero;
         private IntPtr _target = IntPtr.Zero;
         private NativeMethods.VigemX360Notification _notificationCallback;
+        private GCHandle _callbackHandle;
         private Thread _workerThread;
         private volatile bool _running;
 
@@ -67,6 +68,8 @@ namespace Twin2XInput.Bridge
             if (!NativeMethods.HidD_GetPreparsedData(_hid, out _preparsedData))
             {
                 error = "Failed to read HID preparsed descriptor";
+                _hid.Dispose();
+                _hid = null;
                 return false;
             }
 
@@ -75,6 +78,12 @@ namespace Twin2XInput.Bridge
             if (addResult != NativeMethods.VigemErrorNone)
             {
                 error = string.Format("ViGEm target_add failed: 0x{0:X}", addResult);
+                NativeMethods.vigem_target_free(_target);
+                _target = IntPtr.Zero;
+                NativeMethods.HidD_FreePreparsedData(_preparsedData);
+                _preparsedData = IntPtr.Zero;
+                _hid.Dispose();
+                _hid = null;
                 return false;
             }
 
@@ -84,6 +93,7 @@ namespace Twin2XInput.Bridge
                 XInputSlot = slot;
 
             _notificationCallback = OnFeedback;
+            _callbackHandle = GCHandle.Alloc(_notificationCallback);
             NativeMethods.vigem_target_x360_register_notification(_vigem, _target, _notificationCallback, IntPtr.Zero);
 
             _running = true;
@@ -340,6 +350,9 @@ namespace Twin2XInput.Bridge
                 try { NativeMethods.vigem_target_free(_target); } catch { }
                 _target = IntPtr.Zero;
             }
+
+            if (_callbackHandle.IsAllocated)
+                _callbackHandle.Free();
 
             if (_preparsedData != IntPtr.Zero)
             {
