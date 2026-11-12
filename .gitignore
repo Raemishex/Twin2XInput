@@ -1,0 +1,15 @@
+# Build output & release packages
+dist/
+*.zip
+
+# User runtime configuration
+*.ini
+twin2xinput.ini
+
+# Temporary IDE / OS files
+*.user
+*.suo
+*.log
+Thumbs.db
+.DS_Store
+
